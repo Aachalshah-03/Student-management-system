@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_STUDENTS 100
+#define MAX_NAME_LENGTH 50
+
+// Define a structure for a student
+struct Student {
+    int id;
+    char name[MAX_NAME_LENGTH];
+    float grade;
+};
+
+// Function prototypes
+void addStudent(struct Student students[], int *count);
+void deleteStudent(struct Student students[], int *count);
+void displayStudents(struct Student students[], int count);
+
+int main() {
+    struct Student students[MAX_STUDENTS];
+    int count = 0;
+    int choice;
+
+    do {
+        printf("\nStudent Management System\n");
+        printf("1. Add Student\n");
+        printf("2. Delete Student\n");
+        printf("3. Display Students\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1:
+                addStudent(students, &count);
+                break;
+            case 2:
+                deleteStudent(students, &count);
+                break;
+            case 3:
+                displayStudents(students, count);
+                break;
+            case 4:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Please enter a valid option.\n");
+        }
+    } while(choice != 4);
+
+    return 0;
+}
+
+void addStudent(struct Student students[], int *count) {
+    if (*count >= MAX_STUDENTS) {
+        printf("Cannot add more students. Maximum limit reached.\n");
+        return;
+    }
+
+    struct Student newStudent;
+    printf("Enter ID: ");
+    scanf("%d", &newStudent.id);
+    printf("Enter name: ");
+    scanf("%s", newStudent.name);
+    printf("Enter grade: ");
+    scanf("%f", &newStudent.grade);
+
+    students[*count] = newStudent;
+    (*count)++;
+}
+
+void deleteStudent(struct Student students[], int *count) {
+    int id, i;
+    printf("Enter ID of student to delete: ");
+    scanf("%d", &id);
+
+    for (i = 0; i < *count; i++) {
+        if (students[i].id == id) {
+            // Shift remaining elements to fill the gap
+            for (int j = i; j < *count - 1; j++) {
+                students[j] = students[j + 1];
+            }
+            (*count)--;
+            printf("Student deleted successfully.\n");
+            return;
+        }
+    }
+    printf("Student with ID %d not found.\n", id);
+}
+
+void displayStudents(struct Student students[], int count) {
+    if (count == 0) {
+        printf("No students to display.\n");
+        return;
+    }
+
+    printf("ID\tName\tGrade\n");
+    for (int i = 0; i < count; i++) {
+        printf("%d\t%s\t%.2f\n", students[i].id, students[i].name, students[i].grade);
+    }
+}
